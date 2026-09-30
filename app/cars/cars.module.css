@@ -1,0 +1,426 @@
+/* ==========================================================
+   MOTORAQ BROWSE CARS PAGE
+   Append to the bottom of globals.css, below the layout styles.
+   Scoped to .browse. Requires in page.tsx:  <main className="browse">
+   Page structure it relies on: h1, form, count p, car divs, pagination div.
+   ========================================================== */
+
+@keyframes browse-in {
+  from {
+    opacity: 0;
+    transform: perspective(1000px) rotateX(-16deg) translateY(30px);
+  }
+}
+
+/* ---------- Page background: soft tinted backdrop so white cards pop ---------- */
+body:has(> main.browse) {
+  background:
+    radial-gradient(900px 420px at 8% 0, rgba(37, 99, 235, 0.14), transparent 65%),
+    radial-gradient(800px 420px at 95% 8%, rgba(14, 165, 233, 0.12), transparent 65%),
+    #e9eff9;
+}
+
+/* ---------- Page grid: cards sit directly under <main> ---------- */
+.browse {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 28px;
+  padding-top: 32px;
+}
+
+.browse > h1,
+.browse > form,
+.browse > p,
+.browse > div:last-child {
+  grid-column: 1 / -1;
+}
+
+.browse h1 {
+  margin: 0;
+  font-size: clamp(2rem, 4vw, 3rem);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+}
+
+.browse a:focus-visible,
+.browse input:focus-visible,
+.browse select:focus-visible,
+.browse button:focus-visible {
+  outline: 3px solid #93c5fd;
+  outline-offset: 3px;
+}
+
+/* ---------- Filter deck: dark 3D slab ---------- */
+.browse form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 12px;
+  padding: 22px;
+  border-radius: 22px;
+  background: #0b1426;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 6px 0 #060b17,
+    0 26px 40px -20px rgba(11, 20, 38, 0.6);
+  color-scheme: dark;
+  transform-origin: 50% 0;
+  animation: browse-in 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
+}
+
+.browse form input,
+.browse form select {
+  width: 100%;
+  min-width: 0;
+  padding: 13px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.browse form input:first-child {
+  grid-column: 1 / -1;
+}
+
+.browse form input::placeholder {
+  color: #94a3b8;
+}
+
+.browse form input:hover,
+.browse form select:hover {
+  border-color: rgba(255, 255, 255, 0.32);
+}
+
+.browse form input:focus,
+.browse form select:focus {
+  outline: none;
+  border-color: #60a5fa;
+  box-shadow: 0 0 0 4px rgba(96, 165, 250, 0.25);
+}
+
+.browse form select option {
+  background: #fff;
+  color: #111827;
+}
+
+.browse form button {
+  padding: 13px 20px;
+  border-radius: 12px;
+  background: #2563eb;
+  font-weight: 700;
+  box-shadow: 0 5px 0 #1e40af, 0 12px 24px rgba(37, 99, 235, 0.4);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.browse form button:hover {
+  background: #2563eb;
+  transform: translateY(-2px);
+}
+
+.browse form button:active {
+  transform: translateY(4px);
+  box-shadow: 0 1px 0 #1e40af, 0 6px 14px rgba(37, 99, 235, 0.35);
+}
+
+/* ---------- Result count and empty state ---------- */
+.browse form + p {
+  margin: 0;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.browse form + p + p {
+  padding: 48px 24px;
+  border: 1px dashed #cbd5e1;
+  border-radius: 18px;
+  color: #64748b;
+  text-align: center;
+}
+
+/* ---------- Car cards: 3D tilt with layered depth ---------- */
+.browse > div:not(:last-child) {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-content: start;
+  gap: 6px 14px;
+  padding: 14px 14px 18px;
+  border: 1px solid #dbe4f3;
+  border-top: 3px solid #2563eb;
+  border-radius: 18px;
+  background: #fff;
+  transform-style: preserve-3d;
+  transition: transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.45s ease;
+  animation: browse-in 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
+  animation-delay: 0.3s;
+}
+
+.browse > div:nth-child(4) { animation-delay: 0.1s; }
+.browse > div:nth-child(5) { animation-delay: 0.18s; }
+.browse > div:nth-child(6) { animation-delay: 0.26s; }
+.browse > div:nth-child(7) { animation-delay: 0.34s; }
+.browse > div:nth-child(8) { animation-delay: 0.42s; }
+.browse > div:nth-child(9) { animation-delay: 0.5s; }
+
+.browse > div:not(:last-child) > * {
+  transition: transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.45s ease;
+}
+
+.browse > div:not(:last-child) img {
+  grid-column: 1 / -1;
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: 200px;
+  margin-bottom: 12px;
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+.browse > div:not(:last-child) > p:first-child {
+  grid-column: 1 / -1;
+  display: grid;
+  place-items: center;
+  height: 200px;
+  margin: 0 0 12px;
+  border-radius: 12px;
+  background: #f1f5f9;
+  color: #94a3b8;
+}
+
+.browse > div:not(:last-child) h2 {
+  grid-column: 1 / -1;
+  order: 1;
+  margin: 0;
+  font-size: 1.3rem;
+  letter-spacing: -0.01em;
+}
+
+.browse > div:not(:last-child) h2 ~ p {
+  order: 3;
+  margin: 0;
+  color: #64748b;
+  font-size: 0.92rem;
+}
+
+.browse > div:not(:last-child) h2 + p + p {
+  grid-column: 1 / -1;
+  order: 2;
+  justify-self: start;
+  margin: 4px 0 10px;
+  padding: 4px 12px;
+  border-radius: 10px;
+  background: #eff6ff;
+  color: #1d4ed8;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.browse > div:not(:last-child) h2 ~ p:last-of-type {
+  grid-column: 1 / -1;
+  margin-top: 6px;
+  padding-top: 10px;
+  border-top: 1px solid #eef2f7;
+}
+
+.browse > div:not(:last-child) > a {
+  grid-column: 1 / -1;
+  order: 4;
+  margin-top: 12px;
+  padding: 11px 18px;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.browse > div:not(:last-child) > a:hover {
+  border-color: #93c5fd;
+  background: #eff6ff;
+}
+
+@media (hover: hover) {
+  .browse > div:not(:last-child):hover {
+    transform: perspective(1000px) rotateX(5deg) rotateY(-7deg) translateY(-6px);
+    box-shadow: 30px 40px 50px -24px rgba(15, 23, 42, 0.35);
+  }
+
+  .browse > div:not(:last-child):hover img {
+    transform: translateZ(36px);
+    box-shadow: 0 22px 30px -14px rgba(15, 23, 42, 0.5);
+  }
+
+  .browse > div:not(:last-child):hover h2 {
+    transform: translateZ(22px);
+  }
+
+  .browse > div:not(:last-child):hover > a {
+    transform: translateZ(30px);
+  }
+}
+
+/* ---------- Pagination: keycap buttons ---------- */
+.browse > div:last-child {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 12px;
+}
+
+.browse > div:last-child a {
+  padding: 12px 28px;
+  border-radius: 12px;
+  background: #0b1426;
+  color: #fff;
+  font-weight: 700;
+  box-shadow: 0 4px 0 #060b17, 0 12px 20px -8px rgba(11, 20, 38, 0.5);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.browse > div:last-child a:hover {
+  transform: translateY(-2px);
+}
+
+.browse > div:last-child a:active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 #060b17, 0 4px 10px -4px rgba(11, 20, 38, 0.5);
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 768px) {
+  .browse {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 20px;
+    padding-top: 16px;
+  }
+
+  .browse form {
+    padding: 16px;
+    border-radius: 18px;
+  }
+}
+
+/* ---------- Reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .browse *,
+  .browse *::before,
+  .browse *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+@keyframes navIn {
+  from {
+    opacity: 0;
+    transform: perspective(1100px) rotateX(-14deg) translateY(30px);
+  }
+}
+ 
+@keyframes logoutShake {
+  0%, 100% { transform: translateY(-1px) translateX(0); }
+  25% { transform: translateY(-1px) translateX(-3px) rotate(-2deg); }
+  75% { transform: translateY(-1px) translateX(3px) rotate(2deg); }
+}
+ 
+/* Overrides the global nav rules (max-width, space-between, and the
+   mobile flex-direction: column) with a class selector. */
+.dashboardNav {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: fit-content;
+  max-width: calc(100% - 32px);
+  margin: 24px auto 0;
+  padding: 6px;
+  border: 1px solid #dbe4f3;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 4px 0 #dbe4f3;
+  animation: navIn 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
+}
+ 
+.dashboardNav a {
+  padding: 9px 16px;
+  border-radius: 11px;
+  color: #475569;
+  font-weight: 600;
+  transition: transform 0.15s ease, background 0.15s ease, color 0.15s ease;
+}
+ 
+.dashboardNav a:hover {
+  background: #eff6ff;
+  color: #1d4ed8;
+  transform: translateY(-1px);
+}
+ 
+.dashboardNav a.activeNav,
+.dashboardNav a.activeNav:hover {
+  background: #0b1426;
+  color: #fff;
+  box-shadow: 0 3px 0 #060b17;
+}
+ 
+.dashboardNav a:focus-visible,
+.logoutButton:focus-visible {
+  outline: 3px solid #93c5fd;
+  outline-offset: 3px;
+}
+ 
+/* ---------- Logout: quiet red button after a divider ---------- */
+.dashboardNav form {
+  margin: 0 0 0 6px;
+  padding-left: 8px;
+  border-left: 1px solid #dbe4f3;
+}
+ 
+.logoutButton {
+  padding: 9px 16px;
+  border: 0;
+  border-radius: 11px;
+  background: transparent;
+  color: #b91c1c;
+  font-weight: 600;
+  box-shadow: none;
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+ 
+.logoutButton:hover {
+  background: #fef2f2;
+  color: #b91c1c;
+  transform: translateY(-1px);
+  animation: logoutShake 0.35s ease;
+}
+ 
+.logoutButton:active {
+  transform: translateY(1px);
+}
+ 
+/* ---------- Responsive ---------- */
+@media (max-width: 768px) {
+  .dashboardNav {
+    flex-flow: row wrap;
+    gap: 6px;
+    margin-top: 16px;
+  }
+}
+ 
+@media (max-width: 560px) {
+  .dashboardNav form {
+    margin-left: 0;
+    padding-left: 0;
+    border-left: 0;
+  }
+}
+ 
+/* ---------- Reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .dashboardNav,
+  .dashboardNav *,
+  .dashboardNav *::before,
+  .dashboardNav *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}

@@ -1,0 +1,527 @@
+/* Motoraq loading page
+   Story: a person walks in carrying a ring, sets it down, the ring starts spinning.
+   Timeline (seconds):
+   0 to 2.16   person walks in, holding the ring
+   2.16 to 3.06 person leans, ring is set on the road
+   3.06 on     ring spins, person waves now and then
+*/
+
+/* ---------- page ---------- */
+
+.loadingPage {
+  position: relative;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: none;
+  min-height: 70vh;
+  margin: 0;
+  padding: 48px 20px;
+  display: grid;
+  place-items: center;
+}
+
+/* Fixed background layers, same idea as the other pages */
+.loadingPage::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(60% 50% at 12% 8%, rgba(37, 99, 235, 0.14), transparent 70%),
+    radial-gradient(50% 45% at 92% 92%, rgba(147, 197, 253, 0.35), transparent 70%),
+    #e9eff9;
+}
+
+.loadingPage::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: radial-gradient(40% 35% at 50% 42%, rgba(37, 99, 235, 0.1), transparent 70%);
+  animation: drift 14s ease-in-out infinite alternate;
+}
+
+/* ---------- card ---------- */
+
+.loader {
+  box-sizing: border-box;
+  width: min(100%, 460px);
+  padding: 28px 28px 32px;
+  border-radius: 28px;
+  background: #0b1426;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 6px 0 #060b17,
+    0 30px 60px rgba(11, 20, 38, 0.25);
+  text-align: center;
+  animation: tiltIn 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
+}
+
+.loader h2 {
+  margin: 22px 0 6px;
+  font-size: 1.4rem;
+  line-height: 1.2;
+  letter-spacing: -0.03em;
+  color: #ffffff;
+  animation: fadeUp 0.6s ease-out 0.3s backwards;
+}
+
+.loader p {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #94a3b8;
+  animation: textPulse 1.6s ease-in-out 3.06s infinite;
+}
+
+/* ---------- stage (the small scene) ---------- */
+
+.stage {
+  position: relative;
+  height: 180px;
+  border-radius: 18px;
+  background: #0f1b33;
+  overflow: hidden; /* keeps the walk-in from causing sideways scroll */
+}
+
+/* road strip */
+.stage::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 44px;
+  border-top: 2px solid #1a2744;
+  background:
+    repeating-linear-gradient(90deg, #475569 0 24px, transparent 24px 48px) center / 100% 3px no-repeat,
+    #070d1c;
+}
+
+/* ---------- person ---------- */
+
+.person {
+  position: absolute;
+  z-index: 2;
+  left: 50%;
+  bottom: 44px;
+  width: 44px;
+  height: 100px;
+  margin-left: -22px;
+  transform: translateX(-76px);
+  animation: walkIn 2.16s linear;
+}
+
+/* shadow under the feet */
+.person::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -4px;
+  width: 40px;
+  height: 8px;
+  margin-left: -20px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.45);
+}
+
+.figure {
+  position: absolute;
+  inset: 0;
+  transform-origin: 50% 100%;
+  animation:
+    bob 0.36s ease-in-out 6 alternate,
+    place 0.9s ease-in-out 2.16s,
+    idle 2.4s ease-in-out 3.06s infinite;
+}
+
+.head {
+  position: absolute;
+  top: 0;
+  left: 9px;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: #fcd9b6;
+}
+
+/* cap */
+.head::before {
+  content: "";
+  position: absolute;
+  top: -3px;
+  left: -1px;
+  width: 28px;
+  height: 13px;
+  border-radius: 14px 14px 2px 2px;
+  background: #2563eb;
+}
+
+/* eye (person faces right) */
+.head::after {
+  content: "";
+  position: absolute;
+  top: 12px;
+  right: 6px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #0b1426;
+}
+
+.body {
+  position: absolute;
+  top: 28px;
+  left: 9px;
+  width: 26px;
+  height: 38px;
+  border-radius: 12px 12px 8px 8px;
+  background: #2563eb;
+  box-shadow: inset 0 -6px 0 #1e40af;
+}
+
+.leg {
+  position: absolute;
+  top: 64px;
+  width: 11px;
+  height: 34px;
+  border-radius: 6px 6px 4px 4px;
+  transform-origin: 50% 0;
+  animation: step 0.72s ease-in-out 3;
+}
+
+.leg::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 16px;
+  height: 7px;
+  border-radius: 4px 9px 4px 4px;
+}
+
+.legFront {
+  left: 9px;
+  background: #bfdbfe;
+}
+
+.legFront::after {
+  background: #eff6ff;
+}
+
+.legBack {
+  left: 24px;
+  background: #93c5fd;
+  animation-direction: reverse;
+}
+
+.legBack::after {
+  background: #dbe4f3;
+}
+
+.arm {
+  position: absolute;
+  top: 33px;
+  width: 9px;
+  height: 30px;
+  border-radius: 5px;
+  transform-origin: 50% 5px;
+  animation: armCarry 3.06s ease-in-out forwards;
+}
+
+/* hand */
+.arm::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -3px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #fcd9b6;
+}
+
+.armBack {
+  left: 19px;
+  background: #1e40af;
+}
+
+.armFront {
+  left: 22px;
+  background: #3b82f6;
+  animation:
+    armCarry 3.06s ease-in-out forwards,
+    wave 3.2s ease-in-out 3.06s infinite;
+}
+
+/* ---------- loading ring ---------- */
+
+.ring {
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  bottom: 44px;
+  width: 56px;
+  height: 56px;
+  margin-left: -28px;
+  animation: ringMove 3.06s linear;
+}
+
+/* ripple on the road when the ring lands */
+.ring::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -6px;
+  width: 70px;
+  height: 14px;
+  margin-left: -35px;
+  border: 2px solid #93c5fd;
+  border-radius: 50%;
+  opacity: 0;
+  animation: ripple 0.7s ease-out 2.82s;
+}
+
+/* center dot */
+.ring::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 10px;
+  height: 10px;
+  margin: -5px 0 0 -5px;
+  border-radius: 50%;
+  background: #93c5fd;
+  animation: dotPulse 1.2s ease-in-out 3.06s infinite;
+}
+
+.ringSpin {
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  border: 7px solid rgba(147, 197, 253, 0.18);
+  border-top-color: #2563eb;
+  border-right-color: #93c5fd;
+  border-radius: 50%;
+  animation: spin 0.9s linear 3.06s infinite;
+}
+
+/* ---------- keyframes (local to this module) ---------- */
+
+@keyframes tiltIn {
+  from {
+    opacity: 0;
+    transform: perspective(1100px) rotateX(-14deg) translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes drift {
+  from {
+    transform: translate(-3%, -2%);
+  }
+  to {
+    transform: translate(3%, 3%);
+  }
+}
+
+@keyframes walkIn {
+  from {
+    transform: translateX(-318px);
+  }
+  to {
+    transform: translateX(-76px);
+  }
+}
+
+@keyframes bob {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-2px);
+  }
+}
+
+@keyframes place {
+  0%,
+  100% {
+    transform: none;
+  }
+  45% {
+    transform: rotate(14deg) translateY(3px);
+  }
+}
+
+@keyframes idle {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-2px);
+  }
+}
+
+@keyframes step {
+  0% {
+    transform: rotate(0);
+  }
+  25% {
+    transform: rotate(28deg);
+  }
+  75% {
+    transform: rotate(-28deg);
+  }
+  100% {
+    transform: rotate(0);
+  }
+}
+
+/* arms point forward while carrying, then hang down */
+@keyframes armCarry {
+  0%,
+  70.59% {
+    transform: rotate(-88deg);
+  }
+  82% {
+    transform: rotate(-70deg);
+  }
+  100% {
+    transform: rotate(0);
+  }
+}
+
+@keyframes wave {
+  0% {
+    transform: rotate(0);
+  }
+  15% {
+    transform: rotate(-165deg);
+  }
+  25% {
+    transform: rotate(-195deg);
+  }
+  35% {
+    transform: rotate(-165deg);
+  }
+  45% {
+    transform: rotate(-195deg);
+  }
+  60%,
+  100% {
+    transform: rotate(0);
+  }
+}
+
+/* ring: carried at hand height, then dropped, small bounce, rest */
+@keyframes ringMove {
+  0% {
+    transform: translate(-260px, -34px);
+    animation-timing-function: linear;
+  }
+  70.59% {
+    transform: translate(-18px, -34px);
+    animation-timing-function: ease-out;
+  }
+  80% {
+    transform: translate(-6px, -36px);
+    animation-timing-function: ease-in;
+  }
+  92% {
+    transform: translate(0, 0);
+    animation-timing-function: ease-out;
+  }
+  96% {
+    transform: translate(0, -8px);
+    animation-timing-function: ease-in;
+  }
+  100% {
+    transform: translate(0, 0);
+  }
+}
+
+@keyframes ripple {
+  from {
+    opacity: 0.9;
+    transform: scale(0.3);
+  }
+  to {
+    opacity: 0;
+    transform: scale(1.5);
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes dotPulse {
+  0%,
+  100% {
+    opacity: 0.4;
+    transform: scale(0.8);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+}
+
+@keyframes textPulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.55;
+  }
+}
+
+/* ---------- small screens ---------- */
+
+@media (max-width: 480px) {
+  .loader {
+    padding: 20px 16px 24px;
+  }
+
+  .loader h2 {
+    font-size: 1.25rem;
+  }
+}
+
+/* ---------- focus and reduced motion ---------- */
+
+.loadingPage :focus-visible {
+  outline: 3px solid #93c5fd;
+  outline-offset: 3px;
+}
+
+/* No animation: the person stands next to the ring, everything is visible */
+@media (prefers-reduced-motion: reduce) {
+  .loadingPage,
+  .loadingPage *,
+  .loadingPage::before,
+  .loadingPage::after,
+  .loadingPage *::before,
+  .loadingPage *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}

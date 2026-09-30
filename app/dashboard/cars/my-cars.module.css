@@ -1,0 +1,531 @@
+/* ==========================================================
+   MOTORAQ MY CARS (SELLER DASHBOARD)
+   Append to the bottom of globals.css, below the add car styles.
+   Uses the class names already in the page. No markup changes.
+   Self-contained: its keyframes are prefixed with "mc-".
+   ========================================================== */
+
+@keyframes mc-in {
+  from {
+    opacity: 0;
+    transform: perspective(1100px) rotateX(-12deg) translateY(28px);
+  }
+}
+
+@keyframes mc-road {
+  to { background-position: -56px 0; }
+}
+
+@keyframes mc-drive {
+  from { left: -180px; }
+  to { left: 100%; }
+}
+
+@keyframes mc-bob {
+  from { translate: 0 0; rotate: 0deg; }
+  to { translate: 0 -3px; rotate: -1.2deg; }
+}
+
+@keyframes mc-shake {
+  0%, 100% { transform: translateY(-2px) translateX(0); }
+  25% { transform: translateY(-2px) translateX(-3px) rotate(-2deg); }
+  75% { transform: translateY(-2px) translateX(3px) rotate(2deg); }
+}
+
+/* ---------- Page background and shell ---------- */
+body:has(> main.my-cars-page) {
+  background:
+    radial-gradient(900px 420px at 8% 0, rgba(37, 99, 235, 0.14), transparent 65%),
+    radial-gradient(800px 420px at 95% 8%, rgba(14, 165, 233, 0.12), transparent 65%),
+    #e9eff9;
+}
+
+.my-cars-page {
+  padding-top: 28px;
+}
+
+.my-cars-page a:focus-visible,
+.my-cars-page button:focus-visible {
+  outline: 3px solid #93c5fd;
+  outline-offset: 3px;
+}
+
+/* ---------- Dashboard tabs ---------- */
+.dashboardNav {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 auto 24px;
+  padding: 6px;
+  border: 1px solid #dbe4f3;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 4px 0 #dbe4f3;
+  animation: dashIn 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
+}
+
+.dashboardNav a {
+  padding: 9px 16px;
+  border-radius: 11px;
+  color: #475569;
+  font-weight: 600;
+  transition: transform 0.15s ease, background 0.15s ease, color 0.15s ease;
+}
+
+.dashboardNav a:hover {
+  background: #eff6ff;
+  color: #1d4ed8;
+  transform: translateY(-1px);
+}
+
+.dashboardNav a.activeNav,
+.dashboardNav a.activeNav:hover {
+  background: #0b1426;
+  color: #fff;
+  box-shadow: 0 3px 0 #060b17;
+}
+
+/* ---------- Header stage with the cartoon car ---------- */
+.my-cars-page :global(.my-cars-header) {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  margin: 0 0 28px;
+  padding: 40px 40px 104px;
+  overflow: hidden;
+  border: 0;
+  border-radius: 28px;
+  background:
+    linear-gradient(to top, #070d1c 0 60px, transparent 60px),
+    radial-gradient(60% 90% at 85% 0, rgba(37, 99, 235, 0.4), transparent 70%),
+    #0b1426;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 6px 0 #060b17,
+    0 26px 40px -20px rgba(11, 20, 38, 0.6);
+  color: #fff;
+}
+
+:global(.my-cars-header) > * {
+  animation: mc-in 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
+}
+
+:global(.my-cars-header) > a {
+  animation-delay: 0.15s;
+}
+
+:global(.page-label) {
+  display: inline-flex;
+  margin: 0 0 14px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #93c5fd;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+:global(.my-cars-header) h1 {
+  margin: 0 0 10px;
+  color: #fff;
+  font-size: clamp(2rem, 5vw, 3.4rem);
+  line-height: 1.05;
+  letter-spacing: -0.035em;
+}
+
+:global(.my-cars-header) > div > p:last-child {
+  max-width: 520px;
+  margin: 0;
+  color: #cbd5e1;
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+:global(.my-cars-header)::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 28px;
+  z-index: -1;
+  height: 4px;
+  background: repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.55) 0 28px, transparent 28px 56px);
+  background-size: 56px 4px;
+  animation: mc-road 0.7s linear infinite;
+}
+
+:global(.my-cars-header)::after {
+  content: "";
+  position: absolute;
+  left: -180px;
+  bottom: 34px;
+  z-index: 1;
+  width: 144px;
+  height: 72px;
+  background: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 160 80'><ellipse cx='80' cy='77' rx='64' ry='3' fill='%23000' opacity='.3'/><path d='M10 56 Q10 44 22 42 L44 38 Q52 18 70 18 L100 18 Q116 18 124 36 L142 42 Q152 46 152 56 L152 62 Q152 66 148 66 L14 66 Q10 66 10 62 Z' fill='%232563eb'/><path d='M56 38 Q60 26 72 26 L84 26 L84 38 Z' fill='%23bfe3ff'/><path d='M90 26 L100 26 Q110 26 116 38 L90 38 Z' fill='%23bfe3ff'/><rect x='140' y='46' width='10' height='7' rx='3' fill='%23fde047'/><rect x='10' y='48' width='6' height='7' rx='2' fill='%23f87171'/><circle cx='42' cy='66' r='13' fill='%23111827'/><circle cx='42' cy='66' r='6' fill='%23cbd5e1'/><circle cx='120' cy='66' r='13' fill='%23111827'/><circle cx='120' cy='66' r='6' fill='%23cbd5e1'/></svg>") center / contain no-repeat;
+  animation: mc-drive 9s linear infinite, mc-bob 0.45s ease-in-out infinite alternate;
+}
+
+/* ---------- Add car button (header and empty state) ---------- */
+:global(.add-car-button) {
+  flex: none;
+  padding: 13px 24px;
+  border-radius: 12px;
+  background: #2563eb;
+  color: #fff;
+  font-weight: 700;
+  white-space: nowrap;
+  box-shadow: 0 5px 0 #1e40af, 0 14px 28px rgba(37, 99, 235, 0.45);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+:global(.add-car-button):hover {
+  transform: translateY(-3px);
+}
+
+:global(.add-car-button):active {
+  transform: translateY(4px);
+  box-shadow: 0 1px 0 #1e40af, 0 6px 14px rgba(37, 99, 235, 0.4);
+}
+
+/* ---------- Car list ---------- */
+:global(.my-cars-list) {
+  display: grid;
+  gap: 24px;
+  margin-bottom: 0;
+  counter-reset: cars;
+}
+
+:global(.my-cars-list)::after {
+  content: "Total listings: " counter(cars);
+  justify-self: center;
+  padding: 8px 18px;
+  border-radius: 999px;
+  background: #fff;
+  border: 1px solid #dbe4f3;
+  color: #475569;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+/* ---------- Car card: image left, details right ---------- */
+.my-cars-page :global(.my-car-card) {
+  counter-increment: cars;
+  display: grid;
+  grid-template-columns: 300px minmax(0, 1fr);
+  gap: 24px;
+  margin: 0;
+  padding: 16px;
+  border: 1px solid #dbe4f3;
+  border-top: 3px solid #2563eb;
+  border-radius: 20px;
+  background: #fff;
+  box-shadow: 0 4px 0 #dbe4f3, 0 18px 30px -24px rgba(11, 20, 38, 0.4);
+  transform-style: preserve-3d;
+  transition: transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.45s ease;
+  animation: mc-in 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
+  animation-delay: 0.45s;
+}
+
+:global(.my-car-card):nth-child(1) { animation-delay: 0.15s; }
+:global(.my-car-card):nth-child(2) { animation-delay: 0.23s; }
+:global(.my-car-card):nth-child(3) { animation-delay: 0.31s; }
+:global(.my-car-card):nth-child(4) { animation-delay: 0.39s; }
+
+:global(.my-car-image) {
+  position: relative;
+  min-height: 210px;
+  overflow: hidden;
+  border-radius: 14px;
+  background: #dde6f4;
+  transition: transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.45s ease;
+}
+
+.my-cars-page :global(.my-car-image) img {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  max-width: none;
+  height: 100%;
+  border-radius: 0;
+  object-fit: cover;
+  transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+:global(.no-car-image) {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  border: 2px dashed #b9c8e0;
+  border-radius: 14px;
+  color: #64748b;
+  font-weight: 500;
+}
+
+/* Details */
+:global(.my-car-content) {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    "main price"
+    "specs specs"
+    "actions actions";
+  align-content: space-between;
+  gap: 14px 20px;
+  min-width: 0;
+  transition: transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+:global(.my-car-main) {
+  grid-area: main;
+}
+
+:global(.my-car-location) {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 8px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: #eff6ff;
+  color: #1d4ed8;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+:global(.my-car-location)::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #2563eb;
+}
+
+.my-cars-page :global(.my-car-card) h2 {
+  margin: 0;
+  font-size: 1.55rem;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+:global(.my-car-year) {
+  margin: 4px 0 0;
+  color: #64748b;
+  font-weight: 500;
+}
+
+:global(.my-car-price) {
+  grid-area: price;
+  align-self: start;
+  margin: 0;
+  padding: 6px 14px;
+  border-radius: 12px;
+  background: #eff6ff;
+  color: #1d4ed8;
+  font-size: 1.25rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+:global(.my-car-specs) {
+  grid-area: specs;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+:global(.my-car-specs) span {
+  padding: 6px 14px;
+  border: 1px solid #e3ebf7;
+  border-radius: 999px;
+  background: #f3f7fd;
+  color: #334155;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+/* ---------- Actions: keycap buttons ---------- */
+:global(.my-car-actions) {
+  grid-area: actions;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  padding-top: 14px;
+  border-top: 1px solid #eef2f7;
+}
+
+:global(.my-car-actions) form {
+  margin: 0 0 0 auto;
+}
+
+:global(.view-car-button),
+:global(.edit-car-button),
+.my-cars-page :global(.delete-car-button) {
+  padding: 10px 18px;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease, color 0.15s ease;
+}
+
+:global(.view-car-button) {
+  background: #0b1426;
+  color: #fff;
+  box-shadow: 0 4px 0 #060b17;
+}
+
+:global(.edit-car-button) {
+  border: 1.5px solid #93c5fd;
+  background: #fff;
+  color: #1d4ed8;
+  box-shadow: 0 4px 0 #bfdbfe;
+}
+
+.my-cars-page :global(.delete-car-button) {
+  border: 1.5px solid #fca5a5;
+  background: #fff;
+  color: #b91c1c;
+  box-shadow: 0 4px 0 #fecaca;
+}
+
+:global(.view-car-button):hover,
+:global(.edit-car-button):hover {
+  transform: translateY(-2px);
+}
+
+:global(.edit-car-button):hover {
+  background: #eff6ff;
+}
+
+.my-cars-page :global(.delete-car-button):hover {
+  background: #ef4444;
+  border-color: #ef4444;
+  color: #fff;
+  animation: mc-shake 0.35s ease;
+}
+
+:global(.view-car-button):active,
+:global(.edit-car-button):active,
+.my-cars-page :global(.delete-car-button):active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
+}
+
+/* ---------- Hover: 3D tilt with layered depth ---------- */
+@media (hover: hover) {
+  .my-cars-page :global(.my-car-card):hover {
+    transform: perspective(1400px) rotateX(2deg) rotateY(-2.5deg) translateY(-4px);
+    box-shadow: 24px 34px 44px -26px rgba(15, 23, 42, 0.35);
+  }
+
+  :global(.my-car-card):hover :global(.my-car-image) {
+    transform: translateZ(34px);
+    box-shadow: 0 22px 30px -14px rgba(15, 23, 42, 0.5);
+  }
+
+  :global(.my-car-card):hover :global(.my-car-image) img {
+    transform: scale(1.06);
+  }
+
+  :global(.my-car-card):hover :global(.my-car-content) {
+    transform: translateZ(18px);
+  }
+}
+
+/* ---------- Empty state ---------- */
+:global(.empty-cars) {
+  margin: 0;
+  padding: 40px 24px 56px;
+  border: 2.5px dashed #93c5fd;
+  border-radius: 24px;
+  background:
+    repeating-linear-gradient(135deg, rgba(37, 99, 235, 0.05) 0 14px, transparent 14px 28px),
+    #eff6ff;
+  text-align: center;
+  animation: mc-in 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
+}
+
+:global(.empty-cars)::before {
+  content: "";
+  display: block;
+  width: 200px;
+  height: 100px;
+  margin: 0 auto 12px;
+  background: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 160 80'><ellipse cx='80' cy='77' rx='64' ry='3' fill='%23000' opacity='.3'/><path d='M10 56 Q10 44 22 42 L44 38 Q52 18 70 18 L100 18 Q116 18 124 36 L142 42 Q152 46 152 56 L152 62 Q152 66 148 66 L14 66 Q10 66 10 62 Z' fill='%232563eb'/><path d='M56 38 Q60 26 72 26 L84 26 L84 38 Z' fill='%23bfe3ff'/><path d='M90 26 L100 26 Q110 26 116 38 L90 38 Z' fill='%23bfe3ff'/><rect x='140' y='46' width='10' height='7' rx='3' fill='%23fde047'/><rect x='10' y='48' width='6' height='7' rx='2' fill='%23f87171'/><circle cx='42' cy='66' r='13' fill='%23111827'/><circle cx='42' cy='66' r='6' fill='%23cbd5e1'/><circle cx='120' cy='66' r='13' fill='%23111827'/><circle cx='120' cy='66' r='6' fill='%23cbd5e1'/></svg>") center / contain no-repeat;
+  animation: mc-bob 0.9s ease-in-out infinite alternate;
+}
+
+:global(.empty-cars) h2 {
+  margin: 0 0 8px;
+  font-size: 1.6rem;
+  letter-spacing: -0.02em;
+}
+
+:global(.empty-cars) p {
+  max-width: 420px;
+  margin: 0 auto 24px;
+  color: #64748b;
+  line-height: 1.6;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 820px) {
+  .my-cars-page :global(.my-cars-header) {
+    flex-direction: column;
+    padding: 32px 24px 96px;
+    border-radius: 20px;
+  }
+
+  .my-cars-page :global(.my-car-card) {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 18px;
+  }
+
+  :global(.my-car-image) {
+    min-height: 220px;
+  }
+}
+
+@media (max-width: 560px) {
+  :global(.my-car-content) {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "main"
+      "price"
+      "specs"
+      "actions";
+  }
+
+  :global(.my-car-price) {
+    justify-self: start;
+  }
+
+  :global(.my-car-actions) form {
+    margin-left: 0;
+  }
+}
+
+/* ---------- Reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .my-cars-page *,
+  .my-cars-page *::before,
+  .my-cars-page *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  :global(.my-cars-header)::after {
+    left: auto;
+    right: 44px;
+  }
+}

@@ -1,0 +1,649 @@
+/* Motoraq admin: Manage Cars page
+   Same design as Manage Users: dark slab header, keycap buttons,
+   fixed aurora background, grid floor that moves as you scroll, 3D reveals.
+   Self-contained file. Keyframes are local to this module.
+*/
+
+/* ---------- page ---------- */
+
+.adminPage {
+  position: relative;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 32px 20px 72px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+/* fixed background layer 1: light base with a slow aurora */
+.adminPage::before {
+  content: "";
+  position: fixed;
+  inset: -12%;
+  z-index: -1;
+  background:
+    radial-gradient(45% 40% at 14% 10%, rgba(37, 99, 235, 0.16), transparent 70%),
+    radial-gradient(40% 40% at 88% 84%, rgba(147, 197, 253, 0.4), transparent 70%),
+    #e9eff9;
+  animation: drift 18s ease-in-out infinite alternate;
+}
+
+/* fixed background layer 2: grid floor */
+.adminPage::after {
+  content: "";
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 55vh;
+  z-index: -1;
+  background-image:
+    linear-gradient(rgba(37, 99, 235, 0.14) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(37, 99, 235, 0.14) 1px, transparent 1px);
+  background-size: 56px 56px;
+  transform: perspective(600px) rotateX(62deg);
+  transform-origin: 50% 100%;
+  -webkit-mask-image: linear-gradient(to top, #000 10%, transparent 90%);
+  mask-image: linear-gradient(to top, #000 10%, transparent 90%);
+  pointer-events: none;
+}
+
+/* ---------- page header ---------- */
+
+/* The global "header" rule leaks in, so every layout property is set here */
+.adminHeader {
+  position: relative;
+  top: auto;
+  z-index: auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  box-sizing: border-box;
+  width: auto;
+  max-width: none;
+  height: auto;
+  margin: 0;
+  padding: 34px 40px;
+  overflow: hidden;
+  border: 0;
+  border-radius: 28px;
+  backdrop-filter: none;
+  background:
+    radial-gradient(70% 120% at 100% 0%, rgba(37, 99, 235, 0.35), transparent 60%),
+    #0b1426;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 6px 0 #060b17,
+    0 30px 60px rgba(11, 20, 38, 0.22);
+  animation: tiltIn 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
+}
+
+/* small grid floor in the corner (no radar on subpages) */
+.adminHeader::before {
+  content: "";
+  position: absolute;
+  left: -10%;
+  right: -10%;
+  bottom: -40px;
+  height: 150px;
+  background-image:
+    linear-gradient(rgba(147, 197, 253, 0.22) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(147, 197, 253, 0.22) 1px, transparent 1px);
+  background-size: 40px 40px;
+  transform: perspective(300px) rotateX(62deg);
+  transform-origin: 50% 100%;
+  -webkit-mask-image: linear-gradient(to top, #000 15%, transparent 95%);
+  mask-image: linear-gradient(to top, #000 15%, transparent 95%);
+  pointer-events: none;
+}
+
+/* keep the text above the grid */
+.adminHeader > * {
+  position: relative;
+}
+
+.adminHeader > div {
+  flex: 1 1 320px;
+  min-width: 0;
+}
+
+.adminHeader h1 {
+  margin: 0 0 10px;
+  font-size: clamp(1.8rem, 3.6vw, 2.5rem);
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  color: #ffffff;
+}
+
+.adminHeader p {
+  margin: 0;
+  max-width: 44ch;
+  font-size: 1.02rem;
+  line-height: 1.5;
+  color: #94a3b8;
+}
+
+.adminHeader .addButton {
+  flex: none;
+}
+
+.adminHeader .secondaryButton {
+  flex: none;
+}
+
+/* ---------- keycap buttons and links ---------- */
+
+.addButton,
+.secondaryButton,
+.primaryButton,
+.clearButton,
+.pageButton,
+.actionLink,
+.deleteButton {
+  display: inline-block;
+  box-sizing: border-box;
+  margin: 0;
+  border: 0;
+  border-radius: 12px;
+  font-family: inherit;
+  font-weight: 700;
+  line-height: 1.2;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.addButton,
+.secondaryButton,
+.primaryButton,
+.clearButton,
+.pageButton {
+  padding: 12px 22px;
+  font-size: 0.95rem;
+}
+
+.addButton,
+.primaryButton,
+.pageButton {
+  background: #2563eb;
+  color: #ffffff;
+  box-shadow: 0 5px 0 #1e40af;
+}
+
+.primaryButton {
+  height: 46px;
+}
+
+.clearButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 46px;
+  background: #eff6ff;
+  color: #1d4ed8;
+  box-shadow: 0 5px 0 #bfdbfe;
+}
+
+/* small buttons in the table */
+.actionLink,
+.deleteButton {
+  padding: 8px 18px;
+  font-size: 0.85rem;
+}
+
+.actionLink {
+  background: #eff6ff;
+  color: #1d4ed8;
+  box-shadow: 0 4px 0 #bfdbfe;
+}
+
+.editLink {
+  background: #2563eb;
+  color: #ffffff;
+  box-shadow: 0 4px 0 #1e40af;
+}
+
+.deleteButton {
+  background: #fecaca;
+  color: #b91c1c;
+  box-shadow: 0 4px 0 #fca5a5;
+}
+
+@media (hover: hover) {
+  .addButton:hover,
+  .primaryButton:hover,
+  .pageButton:hover {
+    background: #2563eb;
+    color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 7px 0 #1e40af;
+  }
+
+  .clearButton:hover {
+    background: #eff6ff;
+    color: #1d4ed8;
+    transform: translateY(-2px);
+    box-shadow: 0 7px 0 #bfdbfe;
+  }
+
+  .actionLink:hover {
+    background: #eff6ff;
+    color: #1d4ed8;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 0 #bfdbfe;
+  }
+
+  .editLink:hover {
+    background: #2563eb;
+    color: #ffffff;
+    box-shadow: 0 6px 0 #1e40af;
+  }
+
+  .deleteButton:hover {
+    background: #fecaca;
+    color: #b91c1c;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 0 #fca5a5;
+  }
+}
+
+.addButton:active,
+.primaryButton:active,
+.pageButton:active {
+  transform: translateY(4px);
+  box-shadow: 0 1px 0 #1e40af;
+}
+
+.clearButton:active {
+  transform: translateY(4px);
+  box-shadow: 0 1px 0 #bfdbfe;
+}
+
+.actionLink:active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 #bfdbfe;
+}
+
+.editLink:active {
+  box-shadow: 0 1px 0 #1e40af;
+}
+
+.deleteButton:active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 #fca5a5;
+}
+
+/* the "Previous" or "Next" that cannot be used */
+.pageButton.disabled {
+  background: #cbd5e1;
+  color: #64748b;
+  box-shadow: 0 5px 0 #b3bfd0;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ---------- filters ---------- */
+
+.filterCard {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 14px;
+  margin: 0;
+  padding: 24px 26px 28px;
+  border: 1px solid #dbe4f3;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.85);
+  box-shadow: 0 10px 24px rgba(11, 20, 38, 0.06);
+}
+
+/* the global input, select rules leak in, so everything is set here */
+.field {
+  box-sizing: border-box;
+  width: 100%;
+  height: 46px;
+  margin: 0;
+  padding: 0 14px;
+  border: 2px solid #dbe4f3;
+  border-radius: 12px;
+  background: #ffffff;
+  color: #0b1426;
+  font-family: inherit;
+  font-size: 0.95rem;
+  transition: border-color 0.15s ease;
+}
+
+select.field {
+  cursor: pointer;
+}
+
+.field::placeholder {
+  color: #94a3b8;
+}
+
+.field:focus {
+  border-color: #2563eb;
+}
+
+.filterActions {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  padding-top: 4px;
+}
+
+/* ---------- results ---------- */
+
+.resultsCard {
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid #dbe4f3;
+  border-radius: 22px;
+  background: #ffffff;
+  box-shadow: 0 10px 24px rgba(11, 20, 38, 0.08);
+}
+
+.resultsBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 22px;
+  border-bottom: 1px solid #e6edf8;
+  background: #f4f8ff;
+}
+
+.resultsCount {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #334155;
+}
+
+.emptyState {
+  padding: 56px 24px 60px;
+  text-align: center;
+}
+
+.emptyTitle {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: #0b1426;
+}
+
+.emptyText {
+  margin: 8px 0 0;
+  font-size: 0.95rem;
+  color: #64748b;
+}
+
+/* ---------- table ---------- */
+
+/* small screens scroll the table inside this box, not the page */
+.tableWrapper {
+  overflow-x: auto;
+}
+
+.carsTable {
+  width: 100%;
+  min-width: 980px;
+  margin: 0;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.carsTable th {
+  padding: 15px 18px;
+  background: #0b1426;
+  color: #bfdbfe;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.carsTable .thRight {
+  text-align: right;
+}
+
+.carsTable td {
+  padding: 14px 18px;
+  border-bottom: 1px solid #e6edf8;
+  background: #ffffff;
+  color: #334155;
+  font-size: 0.95rem;
+  vertical-align: middle;
+  transition: background 0.2s ease;
+}
+
+.carsTable tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.carsTable .priceCell {
+  font-weight: 700;
+  color: #1d4ed8;
+  white-space: nowrap;
+}
+
+@media (hover: hover) {
+  .carsTable tbody tr:hover td {
+    background: #f4f8ff;
+  }
+
+  .carsTable tbody tr:hover td:first-child {
+    box-shadow: inset 4px 0 0 #2563eb;
+  }
+}
+
+.carInfo {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.thumb,
+.noImage {
+  flex: none;
+  box-sizing: border-box;
+  width: 80px;
+  height: 56px;
+  border-radius: 12px;
+}
+
+.thumb {
+  display: block;
+  object-fit: cover;
+  box-shadow: 0 3px 0 #dbe4f3;
+}
+
+.noImage {
+  display: grid;
+  place-items: center;
+  border: 2px dashed #bfdbfe;
+  background: #eff6ff;
+  font-size: 0.75rem;
+  color: #64748b;
+}
+
+.carName {
+  margin: 0;
+  font-weight: 700;
+  color: #0b1426;
+}
+
+.tableActions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.deleteForm {
+  margin: 0;
+}
+
+/* ---------- pagination ---------- */
+
+.pagination {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 0;
+  padding: 8px 4px 0;
+}
+
+.pageInfo {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #334155;
+}
+
+.pageButtons {
+  display: flex;
+  gap: 14px;
+}
+
+/* ---------- keyframes (local to this module) ---------- */
+
+@keyframes tiltIn {
+  from {
+    opacity: 0;
+    transform: perspective(1100px) rotateX(-14deg) translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes drift {
+  from {
+    transform: translate3d(-3%, -2%, 0);
+  }
+  to {
+    transform: translate3d(3%, 3%, 0);
+  }
+}
+
+@keyframes gridTravel {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 0 560px;
+  }
+}
+
+@keyframes tiltUp {
+  from {
+    opacity: 0;
+    transform: perspective(1100px) rotateX(-25deg) translateY(60px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes zoomDepth {
+  from {
+    opacity: 0;
+    transform: perspective(900px) translateZ(-220px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ---------- scroll-driven animation (only where supported) ---------- */
+/* Write the animation shorthand first, then animation-timeline and animation-range. */
+
+@supports (animation-timeline: view()) {
+  .adminPage::after {
+    animation: gridTravel linear both;
+    animation-timeline: scroll(root);
+  }
+
+  .filterCard {
+    animation: tiltUp ease-out backwards;
+    animation-timeline: view();
+    animation-range: entry 0% entry 60%;
+  }
+
+  .resultsCard {
+    animation: zoomDepth ease-out backwards;
+    animation-timeline: view();
+    animation-range: entry 0% entry 60%;
+  }
+}
+
+/* ---------- small screens ---------- */
+
+@media (max-width: 1000px) {
+  .filterCard {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 720px) {
+  .adminPage {
+    gap: 24px;
+    padding: 20px 16px 56px;
+  }
+
+  .adminHeader {
+    padding: 26px 22px;
+  }
+
+  .adminHeader .addButton {
+    width: 100%;
+  }
+
+  .filterCard {
+    grid-template-columns: 1fr;
+    padding: 20px 18px 24px;
+  }
+
+  .filterActions .primaryButton,
+  .filterActions .clearButton {
+    flex: 1 1 100%;
+  }
+
+  .pagination {
+    justify-content: center;
+  }
+}
+
+/* ---------- focus and reduced motion ---------- */
+
+.adminPage :focus-visible {
+  outline: 3px solid #93c5fd;
+  outline-offset: 3px;
+}
+
+/* No animation: everything sits in place */
+@media (prefers-reduced-motion: reduce) {
+  .adminPage,
+  .adminPage *,
+  .adminPage::before,
+  .adminPage::after,
+  .adminPage *::before,
+  .adminPage *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}

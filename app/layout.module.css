@@ -1,0 +1,482 @@
+/* ==========================================================
+   MOTORAQ GLOBAL LAYOUT: NAVBAR + FOOTER
+   Append to the bottom of globals.css, below the home and auth styles.
+   Uses the class names already in layout.tsx. No markup changes.
+   Overrides the old global header / nav / footer rules.
+   ========================================================== */
+
+/* ---------- Sticky footer: short pages keep the footer at the bottom ---------- */
+body > main {
+  width: 100%;
+  margin-bottom: 40px;
+}
+
+/* ---------- Shared focus ring ---------- */
+.navbar a:focus-visible,
+.footer a:focus-visible {
+  outline: 3px solid #93c5fd;
+  outline-offset: 3px;
+}
+
+/* ---------- Navbar: floating 3D slab ---------- */
+.navbar {
+  position: relative;
+  z-index: 50;
+  padding: 0;
+  border-bottom: 0;
+  background: rgba(11, 20, 38, 0.94);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  box-shadow:
+    inset 0 -1px 0 rgba(255, 255, 255, 0.08),
+    0 5px 0 #060b17,
+    0 22px 32px -16px rgba(11, 20, 38, 0.55);
+}
+
+:global(.navbar-container) {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 14px 24px;
+}
+
+/* Logo: extruded 3D text with a wheel mark */
+:global(.logo) {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: #fff;
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  text-shadow:
+    0 1px 0 #2563eb,
+    0 2px 0 #1f56d8,
+    0 3px 0 #1d4ed8,
+    0 4px 0 #1a42b8,
+    0 8px 12px rgba(0, 0, 0, 0.45);
+  transition: transform 0.25s ease;
+}
+
+:global(.logo)::before {
+  content: "";
+  flex: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle closest-side, #0b1426 0 14%, #cbd5e1 15% 22%, transparent 23%),
+    radial-gradient(circle closest-side, transparent 0 58%, #e2e8f0 59% 70%, #05080f 71% 100%),
+    repeating-conic-gradient(#dbe4ef 0 10deg, #1b2740 10deg 45deg);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.15), 0 0 16px rgba(37, 99, 235, 0.55);
+  transition: transform 0.9s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+:global(.logo):hover {
+  transform: translateY(-1px);
+}
+
+:global(.logo):hover::before {
+  transform: rotate(360deg);
+}
+
+/* Nav links: keycap lift on hover */
+:global(.nav-links) {
+  flex: 1;
+  flex-direction: row;
+  justify-content: center;
+  gap: 4px;
+  max-width: none;
+  margin: 0;
+}
+
+:global(.nav-links) a {
+  padding: 9px 14px;
+  border-radius: 10px;
+  color: #cbd5e1;
+  font-size: 0.95rem;
+  font-weight: 500;
+  white-space: nowrap;
+  transition: transform 0.15s ease, background 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
+}
+
+:global(.nav-links) a.activeNav {
+  background: rgba(255, 255, 255, 0.14);
+  color: #fff;
+  box-shadow: inset 0 -2px 0 #60a5fa;
+}
+
+:global(.nav-links) a:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 3px 0 rgba(255, 255, 255, 0.12);
+}
+
+:global(.nav-links) a:active {
+  transform: translateY(1px);
+  box-shadow: 0 0 0 rgba(255, 255, 255, 0);
+}
+
+:global(.nav-links) a:last-child {
+  border: 1px solid rgba(255, 255, 255, 0.22);
+}
+
+/* Sell button: same keycap as hero and CTA */
+:global(.sell-button) {
+  flex: none;
+  padding: 11px 20px;
+  border-radius: 12px;
+  background: #2563eb;
+  color: #fff;
+  font-weight: 700;
+  white-space: nowrap;
+  box-shadow: 0 4px 0 #1e40af, 0 10px 22px rgba(37, 99, 235, 0.45);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+:global(.sell-button).activeSellButton {
+  background: #1d4ed8;
+  box-shadow: 0 4px 0 #1e40af, 0 10px 22px rgba(37, 99, 235, 0.45), inset 0 0 0 2px rgba(255, 255, 255, 0.28);
+}
+
+:global(.sell-button):hover {
+  transform: translateY(-2px);
+}
+
+:global(.sell-button):active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 #1e40af, 0 5px 12px rgba(37, 99, 235, 0.4);
+}
+
+/* ---------- Footer: dark slab with a perspective grid floor ---------- */
+/* Site footer. Add this to layout.module.css and delete the old .footer rules. Full-width dark bar, content aligned to a 1200px container.
+   One memorable element: a small car drives along the road at the bottom.
+   Not sticky and not fixed. */
+
+.footer {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  color: #94a3b8;
+  background: #0b1426;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+/* Blue glow on the left */
+.footer::before {
+  content: "";
+  position: absolute;
+  top: -180px;
+  left: -160px;
+  width: 560px;
+  height: 560px;
+  pointer-events: none;
+  background: radial-gradient(circle, rgba(37, 99, 235, 0.28), transparent 65%);
+}
+
+/* Small grid floor in the top right corner */
+.footer::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 440px;
+  height: 240px;
+  pointer-events: none;
+  background-image:
+    repeating-linear-gradient(90deg, rgba(147, 197, 253, 0.12) 0 1px, transparent 1px 40px),
+    repeating-linear-gradient(0deg, rgba(147, 197, 253, 0.12) 0 1px, transparent 1px 40px);
+  -webkit-mask-image: radial-gradient(circle at 100% 0, #000, transparent 70%);
+  mask-image: radial-gradient(circle at 100% 0, #000, transparent 70%);
+}
+
+.footerInner {
+  position: relative;
+  z-index: 1;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 56px 24px 24px;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 40px;
+}
+
+.footerBrand {
+  display: grid;
+  gap: 10px;
+  align-content: start;
+  justify-items: start;
+}
+
+.footerWordmark {
+  margin: 0;
+  color: #eff6ff;
+  font-size: 1.75rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+
+.footerTagline {
+  margin: 0 0 8px;
+  max-width: 320px;
+  line-height: 1.5;
+}
+
+/* Keycap button */
+.footerCta {
+  display: inline-block;
+  padding: 12px 20px;
+  color: #ffffff;
+  font-weight: 700;
+  text-decoration: none;
+  background: #2563eb;
+  border-radius: 12px;
+  box-shadow:
+    0 5px 0 #1e40af,
+    0 12px 22px rgba(37, 99, 235, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.footerCta:active {
+  transform: translateY(3px);
+  box-shadow:
+    0 2px 0 #1e40af,
+    0 6px 12px rgba(37, 99, 235, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.footerCta:focus-visible {
+  outline: 2px solid #93c5fd;
+  outline-offset: 3px;
+}
+
+.footerColumn {
+  display: grid;
+  gap: 14px;
+  align-content: start;
+}
+
+.footerHeading {
+  margin: 0;
+  color: #eff6ff;
+  font-size: 0.95rem;
+  letter-spacing: -0.01em;
+}
+
+.footerList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 10px;
+}
+
+.footerLink {
+  position: relative;
+  display: inline-block;
+  color: #94a3b8;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.footerLink::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -3px;
+  height: 2px;
+  background: #2563eb;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.25s ease;
+}
+
+.footerLink:focus-visible {
+  outline: 2px solid #93c5fd;
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+.footerBottom {
+  position: relative;
+  z-index: 1;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px 24px 28px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 8px 24px;
+  border-top: 1px solid rgba(147, 197, 253, 0.12);
+}
+
+.footerCopy {
+  margin: 0;
+  font-size: 0.85rem;
+}
+
+/* Road with a driving car */
+.footerRoad {
+  position: relative;
+  height: 40px;
+  overflow: hidden;
+  background: #060b17;
+  border-top: 2px solid rgba(147, 197, 253, 0.25);
+}
+
+.footerRoad::after {
+  content: "";
+  position: absolute;
+  top: 30px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: repeating-linear-gradient(90deg, rgba(147, 197, 253, 0.4) 0 24px, transparent 24px 48px);
+  animation: footerLane 1.2s linear infinite;
+}
+
+.footerCar {
+  position: absolute;
+  bottom: 14px;
+  left: 0;
+  width: 64px;
+  height: 26px;
+  animation: footerDrive 18s linear infinite;
+}
+
+.footerCarBody {
+  position: absolute;
+  bottom: 4px;
+  left: 0;
+  width: 64px;
+  height: 12px;
+  border-radius: 6px 8px 3px 3px;
+  background: linear-gradient(180deg, #3b82f6, #2563eb);
+}
+
+.footerCarCabin {
+  position: absolute;
+  bottom: 16px;
+  left: 16px;
+  width: 30px;
+  height: 9px;
+  background: #93c5fd;
+  clip-path: polygon(12% 100%, 28% 0, 72% 0, 92% 100%);
+}
+
+.footerCarWheel {
+  position: absolute;
+  bottom: 0;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #dbe4f3;
+  border: 2px solid #060b17;
+  box-sizing: border-box;
+}
+
+.footerWheelA {
+  left: 8px;
+}
+
+.footerWheelB {
+  left: 46px;
+}
+
+.footerCarLight {
+  position: absolute;
+  right: 0;
+  bottom: 8px;
+  width: 4px;
+  height: 3px;
+  background: #ffffff;
+  box-shadow: 0 0 8px 2px rgba(147, 197, 253, 0.8);
+}
+
+@media (hover: hover) {
+  .footerCta:hover {
+    transform: translateY(-2px);
+    box-shadow:
+      0 7px 0 #1e40af,
+      0 16px 26px rgba(37, 99, 235, 0.4),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  }
+
+  .footerLink:hover {
+    color: #ffffff;
+  }
+
+  .footerLink:hover::after {
+    transform: scaleX(1);
+  }
+}
+
+/* Columns tilt up as the footer scrolls into view (current Chrome, Edge, recent Safari) */
+@supports (animation-timeline: view()) {
+  .footerReveal {
+    animation: footerTiltUp linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 70%;
+  }
+}
+
+@keyframes footerTiltUp {
+  from {
+    opacity: 0;
+    transform: perspective(800px) rotateX(18deg) translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: perspective(800px) rotateX(0) translateY(0);
+  }
+}
+
+@keyframes footerDrive {
+  from {
+    transform: translateX(-100px);
+  }
+  to {
+    transform: translateX(calc(100vw + 100px));
+  }
+}
+
+@keyframes footerLane {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: -48px 0;
+  }
+}
+
+@media (max-width: 760px) {
+  .footerInner {
+    grid-template-columns: 1fr 1fr;
+    padding-top: 44px;
+  }
+
+  .footerBrand {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .footerReveal,
+  .footerCar,
+  .footerRoad::after {
+    animation: none !important;
+  }
+
+  .footerCta,
+  .footerLink,
+  .footerLink::after {
+    transition: none !important;
+  }
+}

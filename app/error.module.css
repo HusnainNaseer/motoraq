@@ -1,0 +1,530 @@
+/* Motoraq error page
+   Story: the person walks in, sees the broken ring, and shrugs.
+   Timeline (seconds):
+   0 to 2.16     person walks in
+   2.16 to 2.86  shrug, the "!" pops up, the ring rocks
+   2.86 on       person waits quietly
+*/
+
+/* ---------- page ---------- */
+
+.errorPage {
+  position: relative;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: none;
+  min-height: 70vh;
+  margin: 0;
+  padding: 48px 20px;
+  display: grid;
+  place-items: center;
+}
+
+.errorPage::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(60% 50% at 12% 8%, rgba(37, 99, 235, 0.14), transparent 70%),
+    radial-gradient(50% 45% at 92% 92%, rgba(252, 165, 165, 0.3), transparent 70%),
+    #e9eff9;
+}
+
+.errorPage::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: radial-gradient(40% 35% at 50% 42%, rgba(37, 99, 235, 0.08), transparent 70%);
+  animation: drift 14s ease-in-out infinite alternate;
+}
+
+/* ---------- card ---------- */
+
+.errorCard {
+  box-sizing: border-box;
+  width: min(100%, 460px);
+  padding: 28px 28px 32px;
+  border-radius: 28px;
+  background: #0b1426;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 6px 0 #060b17,
+    0 30px 60px rgba(11, 20, 38, 0.25);
+  text-align: center;
+  animation: tiltIn 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
+}
+
+.errorCard h2 {
+  margin: 22px 0 8px;
+  font-size: 1.4rem;
+  line-height: 1.2;
+  letter-spacing: -0.03em;
+  color: #ffffff;
+  animation: fadeUp 0.6s ease-out 0.3s backwards;
+}
+
+.errorCard p {
+  margin: 0 auto;
+  max-width: 34ch;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: #94a3b8;
+}
+
+/* ---------- buttons ---------- */
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 14px;
+  margin-top: 26px;
+}
+
+.retryButton,
+.homeLink {
+  display: inline-block;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 12px 22px;
+  border: 0;
+  border-radius: 12px;
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1.2;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.retryButton {
+  background: #2563eb;
+  color: #ffffff;
+  box-shadow: 0 5px 0 #1e40af;
+}
+
+.homeLink {
+  background: #16233f;
+  color: #bfdbfe;
+  box-shadow: 0 5px 0 #060b17;
+}
+
+@media (hover: hover) {
+  .retryButton:hover {
+    background: #2563eb;
+    color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 7px 0 #1e40af;
+  }
+
+  .homeLink:hover {
+    background: #16233f;
+    color: #bfdbfe;
+    transform: translateY(-2px);
+    box-shadow: 0 7px 0 #060b17;
+  }
+}
+
+.retryButton:active {
+  transform: translateY(4px);
+  box-shadow: 0 1px 0 #1e40af;
+}
+
+.homeLink:active {
+  transform: translateY(4px);
+  box-shadow: 0 1px 0 #060b17;
+}
+
+/* ---------- stage (the small scene) ---------- */
+
+.stage {
+  position: relative;
+  height: 180px;
+  border-radius: 18px;
+  background: #0f1b33;
+  overflow: hidden;
+}
+
+.stage::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 44px;
+  border-top: 2px solid #1a2744;
+  background:
+    repeating-linear-gradient(90deg, #475569 0 24px, transparent 24px 48px) center / 100% 3px no-repeat,
+    #070d1c;
+}
+
+/* ---------- person ---------- */
+
+.person {
+  position: absolute;
+  z-index: 2;
+  left: 50%;
+  bottom: 44px;
+  width: 44px;
+  height: 100px;
+  margin-left: -22px;
+  transform: translateX(-76px);
+  animation: walkIn 2.16s linear;
+}
+
+.person::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -4px;
+  width: 40px;
+  height: 8px;
+  margin-left: -20px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.45);
+}
+
+.figure {
+  position: absolute;
+  inset: 0;
+  transform-origin: 50% 100%;
+  animation:
+    bob 0.36s ease-in-out 6 alternate,
+    idle 2.4s ease-in-out 2.86s infinite;
+}
+
+.head {
+  position: absolute;
+  top: 0;
+  left: 9px;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: #fcd9b6;
+  transform-origin: 50% 100%;
+  animation: headTilt 0.7s ease-in-out 2.16s;
+}
+
+.head::before {
+  content: "";
+  position: absolute;
+  top: -3px;
+  left: -1px;
+  width: 28px;
+  height: 13px;
+  border-radius: 14px 14px 2px 2px;
+  background: #2563eb;
+}
+
+.head::after {
+  content: "";
+  position: absolute;
+  top: 12px;
+  right: 6px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #0b1426;
+}
+
+.body {
+  position: absolute;
+  top: 28px;
+  left: 9px;
+  width: 26px;
+  height: 38px;
+  border-radius: 12px 12px 8px 8px;
+  background: #2563eb;
+  box-shadow: inset 0 -6px 0 #1e40af;
+}
+
+.leg {
+  position: absolute;
+  top: 64px;
+  width: 11px;
+  height: 34px;
+  border-radius: 6px 6px 4px 4px;
+  transform-origin: 50% 0;
+  animation: step 0.72s ease-in-out 3;
+}
+
+.leg::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 16px;
+  height: 7px;
+  border-radius: 4px 9px 4px 4px;
+}
+
+.legFront {
+  left: 9px;
+  background: #bfdbfe;
+}
+
+.legFront::after {
+  background: #eff6ff;
+}
+
+.legBack {
+  left: 24px;
+  background: #93c5fd;
+  animation-direction: reverse;
+}
+
+.legBack::after {
+  background: #dbe4f3;
+}
+
+.arm {
+  position: absolute;
+  top: 33px;
+  width: 9px;
+  height: 30px;
+  border-radius: 5px;
+  transform-origin: 50% 5px;
+}
+
+.arm::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -3px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #fcd9b6;
+}
+
+.armBack {
+  left: 19px;
+  background: #1e40af;
+  animation: shrugBack 0.7s ease-in-out 2.16s;
+}
+
+.armFront {
+  left: 22px;
+  background: #3b82f6;
+  animation: shrugFront 0.7s ease-in-out 2.16s;
+}
+
+/* ---------- broken ring ---------- */
+
+.ring {
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  bottom: 44px;
+  box-sizing: border-box;
+  width: 56px;
+  height: 56px;
+  margin-left: -28px;
+  border: 7px solid #ef4444;
+  border-top-color: rgba(239, 68, 68, 0.15); /* the gap in the ring */
+  border-radius: 50%;
+  transform: rotate(-14deg);
+  animation:
+    ringIn 0.6s ease-out backwards,
+    rock 0.9s ease-in-out 2.16s 2;
+}
+
+/* the exclamation mark */
+.ring::after {
+  content: "!";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  margin: -12px 0 0 -10px;
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 24px;
+  text-align: center;
+  color: #fca5a5;
+  animation: pop 0.4s cubic-bezier(0.3, 1.6, 0.5, 1) 2.16s backwards;
+}
+
+/* ---------- keyframes (local to this module) ---------- */
+
+@keyframes tiltIn {
+  from {
+    opacity: 0;
+    transform: perspective(1100px) rotateX(-14deg) translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes drift {
+  from {
+    transform: translate(-3%, -2%);
+  }
+  to {
+    transform: translate(3%, 3%);
+  }
+}
+
+@keyframes walkIn {
+  from {
+    transform: translateX(-318px);
+  }
+  to {
+    transform: translateX(-76px);
+  }
+}
+
+@keyframes bob {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-2px);
+  }
+}
+
+@keyframes idle {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-2px);
+  }
+}
+
+@keyframes step {
+  0% {
+    transform: rotate(0);
+  }
+  25% {
+    transform: rotate(28deg);
+  }
+  75% {
+    transform: rotate(-28deg);
+  }
+  100% {
+    transform: rotate(0);
+  }
+}
+
+/* shrug: both hands out, then back down */
+@keyframes shrugFront {
+  0%,
+  100% {
+    transform: rotate(0);
+  }
+  35%,
+  70% {
+    transform: rotate(-38deg);
+  }
+}
+
+@keyframes shrugBack {
+  0%,
+  100% {
+    transform: rotate(0);
+  }
+  35%,
+  70% {
+    transform: rotate(38deg);
+  }
+}
+
+@keyframes headTilt {
+  0%,
+  100% {
+    transform: none;
+  }
+  50% {
+    transform: rotate(-12deg);
+  }
+}
+
+@keyframes ringIn {
+  from {
+    opacity: 0;
+    transform: rotate(-14deg) scale(0.6);
+  }
+  to {
+    opacity: 1;
+    transform: rotate(-14deg) scale(1);
+  }
+}
+
+@keyframes rock {
+  0%,
+  100% {
+    transform: rotate(-14deg);
+  }
+  30% {
+    transform: rotate(-4deg);
+  }
+  65% {
+    transform: rotate(-22deg);
+  }
+}
+
+@keyframes pop {
+  from {
+    transform: scale(0);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+/* ---------- small screens ---------- */
+
+@media (max-width: 480px) {
+  .errorCard {
+    padding: 20px 16px 26px;
+  }
+
+  .errorCard h2 {
+    font-size: 1.25rem;
+  }
+
+  .actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+/* ---------- focus and reduced motion ---------- */
+
+.errorPage :focus-visible {
+  outline: 3px solid #93c5fd;
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .errorPage,
+  .errorPage *,
+  .errorPage::before,
+  .errorPage::after,
+  .errorPage *::before,
+  .errorPage *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
