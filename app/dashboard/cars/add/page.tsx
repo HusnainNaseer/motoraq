@@ -134,6 +134,7 @@ export default function AddCarPage() {
           listing on Motoraq.
         </p>
       </div>
+      <br></br>
 
       <form
         className="add-car-form"
