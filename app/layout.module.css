@@ -120,7 +120,7 @@ body > main {
   box-shadow: 0 0 0 rgba(255, 255, 255, 0);
 }
 
-:global(.nav-links) a:last-child {
+:global(.nav-links) a{
   border: 1px solid rgba(255, 255, 255, 0.22);
 }
 
@@ -149,6 +149,96 @@ body > main {
 :global(.sell-button):active {
   transform: translateY(3px);
   box-shadow: 0 1px 0 #1e40af, 0 5px 12px rgba(37, 99, 235, 0.4);
+}
+
+.navActions {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 10px;
+}
+
+.navbar .logoutButton {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 11px 16px;
+  border: 0;
+  border-radius: 12px;
+  background: #dc2626;
+  color: #fff;
+  font-weight: 700;
+  white-space: nowrap;
+  box-shadow: 0 4px 0 #991b1b, 0 10px 22px rgba(220, 38, 38, 0.28);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+
+.navbar .logoutButton:active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 #991b1b, 0 5px 12px rgba(220, 38, 38, 0.24);
+}
+
+.navbar .logoutButton:focus-visible {
+  outline: 3px solid #fca5a5;
+  outline-offset: 3px;
+}
+
+@media (hover: hover) {
+  .navbar .logoutButton:hover {
+    transform: translateY(-2px);
+    background: #b91c1c;
+  }
+}
+
+@media (max-width: 900px) {
+  .navbar :global(.navbar-container) {
+    flex-wrap: wrap;
+    gap: 10px 12px;
+    padding: 10px 16px;
+  }
+
+  .navbar :global(.logo) {
+    order: 1;
+    min-width: 0;
+    margin-right: auto;
+  }
+
+  .navbar .navActions {
+    order: 2;
+    gap: 8px;
+    margin-left: auto;
+  }
+
+  .navbar :global(.sell-button) {
+    padding: 9px 14px;
+  }
+
+  .navbar :global(.nav-links) {
+    order: 3;
+    flex: 1 0 100%;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    min-width: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .navbar :global(.navbar-container) {
+    padding-right: 12px;
+    padding-left: 12px;
+  }
+
+  .navbar .logoutButton {
+    padding: 8px 12px;
+    font-size: 0.85rem;
+  }
+
+  .navbar :global(.sell-button) {
+    padding: 8px 12px;
+    font-size: 0.85rem;
+  }
 }
 
 /* ---------- Footer: dark slab with a perspective grid floor ---------- */

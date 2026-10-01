@@ -52,15 +52,6 @@ export default async function RootLayout({
               isLoggedIn={!!user}
               isAdmin={isAdmin}
             />
-
-            {user && (
-              <Link
-                href="/dashboard/cars/add"
-                className="sell-button"
-              >
-                Sell Your Car
-              </Link>
-            )}
           </div>
         </header>
 

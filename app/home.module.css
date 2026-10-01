@@ -390,6 +390,10 @@
     gap: 28px;
   }
 
+  .home > section:nth-child(3) > div:has(> article) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
   .home > section:nth-child(5) {
     padding: 48px 24px;
     border-radius: 20px;

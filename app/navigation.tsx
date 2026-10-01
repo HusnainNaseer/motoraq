@@ -148,7 +148,18 @@ export default function Navigation({
         </>
       )}
 
-      {isLoggedIn && (
+    </nav>
+    {isLoggedIn && (
+      <div className={styles.navActions}>
+        <Link
+          href="/dashboard/cars/add"
+          className={`sell-button${
+            activePage === "sellCar" ? ` ${styles.activeSellButton}` : ""
+          }`}
+          aria-current={activePage === "sellCar" ? "page" : undefined}
+        >
+          Sell Your Car
+        </Link>
         <button
           type="button"
           className={styles.logoutButton}
@@ -156,18 +167,7 @@ export default function Navigation({
         >
           Logout
         </button>
-      )}
-    </nav>
-    {isLoggedIn && (
-      <Link
-        href="/dashboard/cars/add"
-        className={`sell-button${
-          activePage === "sellCar" ? ` ${styles.activeSellButton}` : ""
-        }`}
-        aria-current={activePage === "sellCar" ? "page" : undefined}
-      >
-        Sell Your Car
-      </Link>
+      </div>
     )}
     </>
   );
