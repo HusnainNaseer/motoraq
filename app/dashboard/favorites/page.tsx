@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import FavoriteButton from "@/app/favorites/favorite-button";
+import styles from "./favorite.module.css";
 
 export default async function SavedCarsPage() {
   const supabase = await createClient();
@@ -28,9 +29,11 @@ export default async function SavedCarsPage() {
   if (error) {
     console.error("SavedCarsPage query failed:", error);
     return (
-      <main>
-        <h1>Saved Cars</h1>
-        <p>Could not load your saved cars. Please try again.</p>
+      <main className={styles.page}>
+        <div className={styles.errorBox}>
+          <h1>Saved Cars</h1>
+          <p>Could not load your saved cars. Please try again.</p>
+        </div>
       </main>
     );
   }
@@ -77,57 +80,66 @@ export default async function SavedCarsPage() {
   }
 
   return (
-    <main>
-      <h1>Saved Cars</h1>
+    <main className={styles.page}>
+      <header className={styles.header}>
+        <h1>Saved Cars</h1>
 
       {cars.length === 0 ? (
-        <p>
-          You haven&apos;t saved any cars yet.{" "}
-          <Link href="/cars">Browse cars</Link> and tap Save on the ones you
-          like.
-        </p>
+        <p>You haven&apos;t saved any cars yet. <Link href="/cars">Browse cars</Link> and tap Save on the ones you like.</p>
       ) : (
-        <>
-          <p>
-            {cars.length} saved {cars.length === 1 ? "car" : "cars"}
-          </p>
+        <p>{cars.length} saved {cars.length === 1 ? "car" : "cars"}</p>
+      )}
+      </header>
 
+      {cars.length > 0 && (
+        <section className={styles.grid}>
           {cars.map((car) => {
             const imageUrl = imageUrlByCar.get(car.id);
 
             return (
-              <div key={car.id}>
-                {imageUrl ? (
-                  <img
-                    src={imageUrl}
-                    alt={`${car.make} ${car.model}`}
-                    width={300}
-                  />
-                ) : (
-                  <p>No image available</p>
-                )}
+              <article className={styles.card} key={car.id}>
+                <div className={styles.imageWrap}>
+                  {imageUrl ? (
+                    <img
+                      src={imageUrl}
+                      alt={`${car.make} ${car.model}`}
+                    />
+                  ) : (
+                    <p className={styles.noImage}>No image available</p>
+                  )}
+                </div>
 
-                <h2>
-                  {car.make} {car.model}
-                </h2>
+                <div className={styles.body}>
+                  <p className={styles.location}>{car.location}</p>
+                  <h2 className={styles.title}>
+                    {car.make} {car.model}
+                  </h2>
+                  <p className={styles.meta}>Year: {car.year}</p>
+                  <p className={styles.price}>
+                    PKR {new Intl.NumberFormat("en-PK").format(Number(car.price))}
+                  </p>
+                  <p className={styles.meta}>
+                    Mileage: {new Intl.NumberFormat("en-PK").format(Number(car.mileage))} km
+                  </p>
+                  <p className={styles.meta}>Fuel: {car.fuel_type}</p>
+                  <p className={styles.meta}>Transmission: {car.transmission}</p>
 
-                <p>Year: {car.year}</p>
-                <p>Price: PKR {new Intl.NumberFormat("en-PK").format(Number(car.price))}</p>
-                <p>Mileage: {new Intl.NumberFormat("en-PK").format(Number(car.mileage))} km</p>
-                <p>Location: {car.location}</p>
-
-                <Link href={`/cars/${car.id}`}>View Details</Link>{" "}
-
-                <FavoriteButton
-                  carId={car.id}
-                  initialSaved={true}
-                  isLoggedIn={true}
-                  redirectTo="/dashboard/favorites"
-                />
-              </div>
+                  <div className={styles.actions}>
+                    <Link className={styles.viewLink} href={`/cars/${car.id}`}>
+                      View Details
+                    </Link>
+                    <FavoriteButton
+                      carId={car.id}
+                      initialSaved={true}
+                      isLoggedIn={true}
+                      redirectTo="/dashboard/favorites"
+                    />
+                  </div>
+                </div>
+              </article>
             );
           })}
-        </>
+        </section>
       )}
     </main>
   );

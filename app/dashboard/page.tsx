@@ -21,9 +21,9 @@ export default async function DashboardPage() {
   // Get user's profile
   const { data: profile } = await supabase
     .from("profiles")
-    .select("full_name, role")
+    .select("full_name, role, phone")
     .eq("id", user.id)
-    .single();
+    .maybeSingle();
 
   // Get user's cars
   const { data: cars, error } = await supabase
@@ -179,6 +179,54 @@ export default async function DashboardPage() {
 
               <p>
                 Create a new vehicle listing.
+              </p>
+            </div>
+
+            <span className={styles.actionArrow}>
+              →
+            </span>
+          </Link>
+
+          <Link
+            href="/dashboard/favorites"
+            className={styles.actionCard}
+          >
+            <span className={styles.actionIcon}>
+              ♥
+            </span>
+
+            <div>
+              <h3>
+                Saved Cars
+              </h3>
+
+              <p>
+                Cars you saved while browsing.
+              </p>
+            </div>
+
+            <span className={styles.actionArrow}>
+              →
+            </span>
+          </Link>
+
+          <Link
+            href="/dashboard/profile"
+            className={styles.actionCard}
+          >
+            <span className={styles.actionIcon}>
+              👤
+            </span>
+
+            <div>
+              <h3>
+                My Profile
+              </h3>
+
+              <p>
+                {profile?.phone
+                  ? "Update the phone number buyers see."
+                  : "Add your phone number so buyers can reach you."}
               </p>
             </div>
 

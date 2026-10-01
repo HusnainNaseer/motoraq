@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react";
 import Link from "next/link";
 import { toggleFavorite } from "./action";
+import styles from "./favorite-button.module.css";
 
 type Props = {
   carId: number;
@@ -25,7 +26,7 @@ export default function FavoriteButton({
   if (!isLoggedIn) {
     return (
       <Link
-        className="favorite-button"
+        className={styles.button}
         href={`/login?redirect=${encodeURIComponent(redirectTo)}`}
       >
         ♡ Save
@@ -56,7 +57,7 @@ export default function FavoriteButton({
     <>
       <button
         type="button"
-        className="favorite-button"
+        className={`${styles.button} ${saved ? styles.saved : ""}`}
         onClick={handleClick}
         disabled={pending}
         aria-pressed={saved}
@@ -64,7 +65,11 @@ export default function FavoriteButton({
         {saved ? "♥ Saved" : "♡ Save"}
       </button>
 
-      {error && <p role="alert">{error}</p>}
+      {error && (
+        <p className={styles.error} role="alert">
+          {error}
+        </p>
+      )}
     </>
   );
 }
