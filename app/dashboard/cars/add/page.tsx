@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { normalizePkPhone, formatPkPhone } from "@/lib/supabase/phone";
 import styles from "./add-car.module.css";
 
 export default function AddCarPage() {
@@ -13,6 +14,43 @@ export default function AddCarPage() {
   const [error, setError] = useState("");
   const [selectedImages, setSelectedImages] = useState<File[]>([]);
   const [previews, setPreviews] = useState<string[]>([]);
+
+  // Phone number lives on the seller's profile (one number for all listings).
+  // profilePhone: undefined = not loaded yet, null = none saved, string = saved
+  const [phone, setPhone] = useState("");
+  const [profilePhone, setProfilePhone] = useState<
+    string | null | undefined
+  >(undefined);
+
+  // Pre-fill the phone field if the seller already saved one
+  useEffect(() => {
+    async function loadPhone() {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (!user) return;
+
+      const { data: profile, error: profileError } = await supabase
+        .from("profiles")
+        .select("phone")
+        .eq("id", user.id)
+        .maybeSingle();
+
+      // If this fails we leave profilePhone undefined, so submitting the
+      // form will not touch the saved number.
+      if (profileError) return;
+
+      const saved = profile?.phone ?? null;
+      setProfilePhone(saved);
+
+      if (saved) {
+        setPhone(formatPkPhone(saved));
+      }
+    }
+
+    loadPhone();
+  }, [supabase]);
 
   function handleImageChange(
     e: React.ChangeEvent<HTMLInputElement>
@@ -63,6 +101,34 @@ export default function AddCarPage() {
       setError("You must be logged in to add a car.");
       setLoading(false);
       return;
+    }
+
+    // Validate the phone number before creating anything
+    const rawPhone = String(formData.get("phone") ?? "").trim();
+    const newPhone = rawPhone === "" ? null : normalizePkPhone(rawPhone);
+
+    if (rawPhone !== "" && !newPhone) {
+      setError(
+        "Enter a valid Pakistani mobile number, like 0300 1234567."
+      );
+      setLoading(false);
+      return;
+    }
+
+    // Save the number to the profile only if it changed
+    if (profilePhone !== undefined && newPhone !== profilePhone) {
+      const { data: updated, error: phoneError } = await supabase
+        .from("profiles")
+        .update({ phone: newPhone })
+        .eq("id", user.id)
+        .select("id");
+
+      if (phoneError || !updated || updated.length === 0) {
+        console.error("phone save failed:", phoneError);
+        setError("Could not save your phone number. Please try again.");
+        setLoading(false);
+        return;
+      }
     }
 
     // Create car first
@@ -330,6 +396,37 @@ export default function AddCarPage() {
               name="location"
               placeholder="e.g. Islamabad"
               required
+            />
+
+          </div>
+
+        </section>
+
+        {/* Contact */}
+        <section className="form-section">
+
+          <div className="form-section-header">
+            <h2>Contact</h2>
+            <p>
+              Optional. Logged-in buyers will see Call and WhatsApp
+              buttons. This number is saved to your profile and used
+              for all your listings.
+            </p>
+          </div>
+
+          <div className="form-field">
+
+            <label htmlFor="phone">
+              Phone / WhatsApp number
+            </label>
+
+            <input
+              id="phone"
+              name="phone"
+              type="tel"
+              placeholder="e.g. 0300 1234567"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
             />
 
           </div>

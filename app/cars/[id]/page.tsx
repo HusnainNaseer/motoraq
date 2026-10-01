@@ -2,6 +2,8 @@ import { createClient } from "@/lib/supabase/server";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import styles from "./car-details.module.css";
+import { formatPkPhone } from "@/lib/supabase/phone";
+import FavoriteButton from "@/app/favorites/favorite-button";
 
 export default async function CarDetailsPage({
   params,
@@ -45,12 +47,34 @@ export default async function CarDetailsPage({
     }
   }
 
-  // Get seller information
-  const { data: seller } = await supabase
-    .from("profiles")
-    .select("full_name")
-    .eq("id", car.user_id)
-    .single();
+  // Seller name (everyone) and phone (logged-in users only)
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  const { data: contactRows } = await supabase.rpc("get_seller_contact", {
+    p_car_id: car.id,
+  });
+  const seller = contactRows?.[0];
+  const phone: string | null = seller?.phone ?? null;
+
+  const whatsappText = encodeURIComponent(
+    `Hi, I'm interested in your ${car.year} ${car.make} ${car.model} (Listing #${car.id}) on Motoraq.`
+  );
+
+  // Has this user already saved the car?
+  let isSaved = false;
+
+  if (user) {
+    const { data: favorite } = await supabase
+      .from("favorites")
+      .select("car_id")
+      .eq("car_id", car.id)
+      .eq("user_id", user.id)
+      .maybeSingle();
+
+    isSaved = !!favorite;
+  }
 
   // Format price
   const formattedPrice = new Intl.NumberFormat("en-PK").format(
@@ -125,6 +149,13 @@ export default async function CarDetailsPage({
               PKR {formattedPrice}
             </p>
 
+            <FavoriteButton
+              carId={car.id}
+              initialSaved={isSaved}
+              isLoggedIn={!!user}
+              redirectTo={`/cars/${car.id}`}
+            />
+
           </div>
 
           {/* Specifications */}
@@ -198,6 +229,26 @@ export default async function CarDetailsPage({
                 {seller?.full_name || "Motoraq Seller"}
               </strong>
             </p>
+
+            {phone ? (
+              <p className="seller-actions">
+                <a href={`tel:+${phone}`}>Call {formatPkPhone(phone)}</a>{" "}
+                <a
+                  href={`https://wa.me/${phone}?text=${whatsappText}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  WhatsApp
+                </a>
+              </p>
+            ) : user ? (
+              <p>This seller hasn&apos;t added a phone number yet.</p>
+            ) : (
+              <p>
+                <Link href={`/login?redirect=/cars/${car.id}`}>Log in</Link> to
+                see the seller&apos;s contact details.
+              </p>
+            )}
 
           </section>
 
